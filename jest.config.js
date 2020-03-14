@@ -3,16 +3,13 @@ module.exports = {
 
   collectCoverage: true,
 
-
   coverageDirectory: 'coverage',
-
 
   moduleDirectories: [
     'node_modules',
   ],
 
   moduleFileExtensions: ['js', 'jsx'],
-
 
   setupFilesAfterEnv: ['jest-enzyme'],
 

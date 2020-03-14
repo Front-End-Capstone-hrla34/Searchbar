@@ -4,20 +4,19 @@ Recreates the search bar functionality from a Trafalgar trip page, offering poss
 RELATED PROJECTS
 
 https://github.com/Front-End-Capstone-hrla34/calendar-quote
+
 https://github.com/Front-End-Capstone-hrla34/Itinerary
+
 https://github.com/Front-End-Capstone-hrla34/Reviews
 
-USAGE
-
-Combines with other components to recreate a Trafalagar trip description page.
-
-DEVELOPMENT
-
-Installing Dependencies
+GETTING STARTED:
 
 From within the root directory:
 
-npm install,
+npm install (to install dependencies),
+
 npm start (to run server),
+
 npm run build (to run webpack),
+
 npm run seed (to seed database)

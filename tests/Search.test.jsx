@@ -3,8 +3,6 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import { shallow } from 'enzyme';
-import axios from 'axios';
-import Jest from '../jest.config';
 
 import Search from '../client/src/components/Search';
 

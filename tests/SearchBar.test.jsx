@@ -2,8 +2,6 @@
 /* eslint-disable no-undef */
 import React from 'react';
 import { shallow } from 'enzyme';
-import axios from 'axios';
-import Jest from '../jest.config';
 
 import SearchBar from '../client/src/components/SearchBar';
 

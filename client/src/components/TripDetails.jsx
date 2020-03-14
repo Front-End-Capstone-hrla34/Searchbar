@@ -15,28 +15,24 @@ const TripDetails = (props) => {
     objectFit: 'cover',
     display: 'block',
   };
-
   const calendar = {
     width: '25px',
     height: '25px',
     position: 'absolute',
     marginTop: '-2px',
   };
-
   const flag = {
     width: '25px',
     height: '25px',
     position: 'absolute',
     marginTop: '-2px',
   };
-
   const pointer = {
     width: '25px',
     height: '25px',
     position: 'absolute',
     marginTop: '-2px',
   };
-
   const tripName = {
     textTransform: 'uppercase',
     marginTop: '60px',
@@ -45,7 +41,6 @@ const TripDetails = (props) => {
     lineHeight: '30px',
     fontWeight: '700',
   };
-
   const daysCountriesCitiesDiv = {
     fontWeight: '400px',
     fontFamily: 'opensans,sans-serif',
@@ -59,12 +54,10 @@ const TripDetails = (props) => {
     display: 'flex',
     flexDirection: 'row',
   };
-
   const daysCountriesCitiesSpan = {
     marginLeft: '20px',
     marginRight: '20px',
   };
-
   const firstDescription = {
     color: '#767676',
     textTransform: 'uppercase',
@@ -74,7 +67,6 @@ const TripDetails = (props) => {
     marginBottom: '10px',
     width: '40%',
   };
-
   const secondDescription = {
     fontWeight: '400px',
     color: '#4c4c4c',
@@ -83,23 +75,18 @@ const TripDetails = (props) => {
     fontFamily: 'opensans, sans-serif',
     width: '40%',
   };
-
-  // check if imageUrl has a space (in city name), and if so add an _ for AWS references
-
-  if (props.trip.imageUrl.includes(' ')) {
-    const index = props.trip.imageUrl.indexOf(' ');
-    var imageUrl = `${props.trip.imageUrl.slice(0, index)}_${props.trip.imageUrl.slice(index + 1, props.trip.imageUrl.length)}`;
-  } else {
-    var { imageUrl } = props.trip;
-  }
-
+  const sectionStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '93%',
+    margin: 'auto',
+  };
   return (
     <div>
-      <div id="BPcityimage"><img  style={tripImg} src={imageUrl} alt={imageUrl.slice(0, -4)} /></div>
-
-      <section id="tripDetails" style={{
-        display: 'flex', flexDirection: 'column', width: '93%', margin: 'auto',
-      }}
+      <div id="BPcityimage"><img style={tripImg} src={props.trip.imageUrl} alt={props.trip.imageUrl.slice(0, -4)} /></div>
+      <section
+        id="tripDetails"
+        style={sectionStyle}
       >
         <h1 id="tripIntro" style={tripName}>{props.trip.name}</h1>
         <div style={daysCountriesCitiesDiv}>
@@ -116,7 +103,6 @@ const TripDetails = (props) => {
           </span>
           <span style={daysCountriesCitiesSpan} className="BPcountry">
             <img style={flag} src="https://front-end-capstone-trafalgar.s3-us-west-1.amazonaws.com/flag.svg.png" alt="flag" />
-
             <span style={daysCountriesCitiesSpan} className="BPcountry">
               <strong style={{ marginLeft: '15px' }}>
                 {' '}
@@ -153,9 +139,8 @@ const TripDetails = (props) => {
             </span>
           </span>
         </div>
-
         <div>
-          <p className="nunito"style={firstDescription}>{props.trip.descriptions[0]}</p>
+          <p className="nunito" style={firstDescription}>{props.trip.descriptions[0]}</p>
           <p className="nunito" style={secondDescription}>{props.trip.descriptions[1]}</p>
         </div>
       </section>

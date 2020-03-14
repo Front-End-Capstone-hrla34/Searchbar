@@ -1,6 +1,5 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable react/no-unused-state */
 /* eslint-disable max-len */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -13,7 +12,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/no-unresolved */
 import React from 'react';
-import ReactDom, { render } from 'react-dom';
 import Axios from 'axios';
 import TripDetails from './TripDetails';
 import Search from './Search';
@@ -31,7 +29,6 @@ export default class SearchBar extends React.Component {
       customersInfo: true,
       agentsInfo: false,
       showtripdetails: true,
-      showSecondSearchBar: false,
     };
     this.getAllTrips = this.getAllTrips.bind(this);
     this.getOneTrip = this.getOneTrip.bind(this);
@@ -43,15 +40,9 @@ export default class SearchBar extends React.Component {
     this.showContinentResults = this.showContinentResults.bind(this);
     this.updateSearchResults = this.updateSearchResults.bind(this);
     this.removeSearchResults = this.removeSearchResults.bind(this);
-    this.showSecondSearchBar = this.showSecondSearchBar.bind(this);
   }
 
   getAllTrips() {
-    // initial request for when the page first loads
-    // to retrieve the name/season/year/id for each trip
-    // store as allTrips in this.state
-    // use name/season/year for search results dropdown
-    // and id of a selected trip to retrieve the complete trip info
     Axios.get('api/trips/get')
       .then((trips) => this.setState({
         allTrips: trips.data,
@@ -60,17 +51,12 @@ export default class SearchBar extends React.Component {
   }
 
   getOneTrip(id) {
-    // when user selects a trip, use its id to get all the info from that trip
-    // and store the info in this.state as currentTrip
-    // then will need to re-render the page accordingly with that data
-    // assuming this isn't original page load (user has typed text), reset search results to empty and search form to its original state
-    // also run this with a random id (between 1-100) when page first loads
     if (id === 0) { return; }
     Axios.get(`api/trips/${id}`)
       .then((trip) => this.setState({
         currentTrip: trip.data,
         queryResults: [],
-        query: ''
+        query: '',
       }, () => console.log(this.state.currentTrip)))
       .catch((err) => console.error(err));
     if (this.state.query.length > 0) { document.getElementById('BPsearchfield').reset(); }
@@ -78,8 +64,6 @@ export default class SearchBar extends React.Component {
 
   updateQuery(e) {
     e.preventDefault();
-    // as user types in search bar, update the state with their text
-    // run function to update search results each time
     this.setState({
       query: e.target.value,
     }, () => this.updateSearchResults());
@@ -87,14 +71,11 @@ export default class SearchBar extends React.Component {
 
   updateSearchResults() {
     const search = this.state.query;
-    // if user has typed less than 3 letters, don't check for results
     if (search.length > 0 && search.length < 3) {
       this.setState({
         queryResults: [['Keep typing to see results', 0]],
       });
     }
-    // each result will be structured as tuple with name/season/year for display then id for fetching data
-    // get results by matching trips whose name includes the query (not case-sensitive)
     if (search.length >= 3) {
       const results = [];
       for (let h = 0; h < this.state.allTrips.length; h += 1) {
@@ -102,7 +83,6 @@ export default class SearchBar extends React.Component {
           results.push(this.state.allTrips[h]);
         }
       }
-      // and also check if any cities in the trip include the query (not case-sensitive)
       const cityResults = [];
       const { allTrips } = this.state;
       for (let i = 0; i < allTrips.length; i += 1) {
@@ -113,8 +93,6 @@ export default class SearchBar extends React.Component {
           }
         }
       }
-
-      // then if trip not already in the results array, add it
       for (let q = 0; q < cityResults.length; q += 1) {
         const tripName = cityResults[q][1];
         let repeated = false;
@@ -127,19 +105,13 @@ export default class SearchBar extends React.Component {
           results.push(cityResults[q]);
         }
       }
-
-      // finally check if the trip's continent includes the query (not case-sensitive)
       const continentResults = [];
-      // // const allTrips = this.state.allTrips;
       for (let x = 0; x < allTrips.length; x += 1) {
         const continent = allTrips[x][4];
-
         if (continent.toUpperCase().includes(search.toUpperCase())) {
           continentResults.push(allTrips[x]);
         }
       }
-
-      // // then if trip not already in the results array, add it
       for (let z = 0; z < continentResults.length; z += 1) {
         const tripName = continentResults[z][1];
         let repeated = false;
@@ -149,10 +121,9 @@ export default class SearchBar extends React.Component {
           }
         }
         if (!repeated) {
-          results.push(continentResults[z])
+          results.push(continentResults[z]);
         }
       }
-
       let updatedTrips = results.map((result) => [`${result[1]} ${result[2]} ${result[3]}`, result[0], result[6]]);
       if (updatedTrips.length === 0) {
         updatedTrips = [['Sorry, no results found', 0]];
@@ -164,16 +135,14 @@ export default class SearchBar extends React.Component {
   }
 
   removeSearchResults() {
-    // erase search results when user clicks outside of that component
     if (this.state.queryResults.length > 0) {
       this.setState({
-        queryResults: []
-      })
+        queryResults: [],
+      });
     }
   }
 
   toggleCustomers() {
-    // shows customers contact #
     this.setState({
       customersInfo: true,
       agentsInfo: false,
@@ -181,7 +150,6 @@ export default class SearchBar extends React.Component {
   }
 
   toggleAgents() {
-    // shows agents contact #
     this.setState({
       customersInfo: false,
       agentsInfo: true,
@@ -189,51 +157,29 @@ export default class SearchBar extends React.Component {
   }
 
   hidetripdetails() {
-    // hide the lower sections when user hovers over header dropdowns
     this.setState({
       showtripdetails: false,
     });
   }
 
   showtripdetails() {
-    // show the lower sections when user leaves header dropdowns
     this.setState({
       showtripdetails: true,
     });
   }
 
-  showContinentResults (continent) {
-    // show search results for a continent when user clicks on it
+  showContinentResults(continent) {
     this.setState({
-      query: continent
-    }, () => this.updateSearchResults())
-  }
-
-  showSecondSearchBar() {
-    // display a second search bar (fixed to bottom of page) if user scrolls all the way down
-    setInterval(() => {
-      if (window.scrollY > 2700) {
-        this.setState({
-          showSecondSearchBar: true
-        })
-      }
-      else {
-        this.setState({
-          showSecondSearchBar: false
-        })
-      }
-    }
-      , 100)
+      query: continent,
+    }, () => this.updateSearchResults());
   }
 
   componentDidMount() {
-    // when the page first renders, get all trips' info and also pick a random trip to display its info and check whether to show second search bar
     this.getAllTrips();
-    var id = window.location.href;
-    var edited = id.split('/');
-    var url = edited[edited.length - 1]
+    const id = window.location.href;
+    const edited = id.split('/');
+    const url = edited[edited.length - 1];
     this.getOneTrip(url);
-    this.showSecondSearchBar()
   }
 
   render() {
@@ -245,7 +191,7 @@ export default class SearchBar extends React.Component {
     };
     const tripdetailsplacement = {
       opacity: this.state.showtripdetails ? 1 : 0.3,
-      marginBottom: '45px'
+      marginBottom: '45px',
     };
 
     return (
@@ -269,54 +215,47 @@ export default class SearchBar extends React.Component {
                 Can we help you?
               </div>
             ) : (
-                <div>
-                  <span style={{ fontWeight: 'bold'}}>800 854 0103</span>
-                  <br />
-                  {' '}
+              <div>
+                <span style={{ fontWeight: 'bold' }}>800 854 0103</span>
+                <br />
+                {' '}
                   call a travel agent
               </div>
-              )}
+            )}
           </div>
         </div>
-
         <div className="BPheader2">
           <div className="BProw2part1" id="BPdestinations" onMouseEnter={this.hidetripdetails} onMouseLeave={this.showtripdetails}>
             {' '}
             <span>DESTINATIONS</span>
             <i className="BPdownArrow" />
             <div className="BPdestinationsDropdown">
-              
-              <div className = "BPContinent" onClick = {() => this.showContinentResults('Europe')} style={{ border: 'none' }}>
-              <span >EUROPE</span>
+              <div className="BPContinent" onClick={() => this.showContinentResults('Europe')} style={{ border: 'none' }}>
+                <span>EUROPE</span>
                 <i className="BPrightArrow" />
               </div>
-              <div className = "BPContinent" onClick = {() => this.showContinentResults('South America')}>
-              <span>SOUTH AMERICA</span>
+              <div className="BPContinent" onClick={() => this.showContinentResults('South America')}>
+                <span>SOUTH AMERICA</span>
                 <i className="BPrightArrow" />
               </div>
-
-              <div className = "BPContinent" onClick = {() => this.showContinentResults('North America')}>
-              <span>NORTH AMERICA</span>
+              <div className="BPContinent" onClick={() => this.showContinentResults('North America')}>
+                <span>NORTH AMERICA</span>
                 <i className="BPrightArrow" />
               </div>
-
-              <div className = "BPContinent" onClick = {() => this.showContinentResults('Africa')}>
-              <span>AFRICA</span>
+              <div className="BPContinent" onClick={() => this.showContinentResults('Africa')}>
+                <span>AFRICA</span>
                 <i className="BPrightArrow" />
               </div>
-
-              <div className = "BPContinent" onClick = {() => this.showContinentResults('Asia')}>
+              <div className="BPContinent" onClick={() => this.showContinentResults('Asia')}>
                 <span>ASIA</span>
                 <i className="BPrightArrow" />
               </div>
-
-              <div className = "BPContinent" onClick = {() => this.showContinentResults('Australia')}>
+              <div className="BPContinent" onClick={() => this.showContinentResults('Australia')}>
                 <span>AUSTRALIA</span>
                 <i className="BPrightArrow" />
               </div>
             </div>
           </div>
-
           <div className="BProw2part1" id="BPdeals" onMouseEnter={this.hidetripdetails} onMouseLeave={this.showtripdetails}>
             {' '}
             <span>DEALS</span>
@@ -327,14 +266,13 @@ export default class SearchBar extends React.Component {
                 <br />
                 Our latest offers, making travel more affordable
               </div>
-              <section style={{display: 'flex', flexDirection: 'row'}}>
+              <section style={{ display: 'flex', flexDirection: 'row' }}>
                 <div>
                   <span style={{ fontWeight: 'bold', fontSize: '16px' }}>EARLY PAYMENT DISCOUNTS</span>
                   {' '}
                   <br />
                   Book early and save 7.5%* on select trips
                   <i className="BPrightArrow" />
-
                 </div>
                 <div>
                   <span style={{ fontWeight: 'bold', fontSize: '16px' }}>EUROPE 2020</span>
@@ -343,7 +281,6 @@ export default class SearchBar extends React.Component {
                   SAVE up to 7.5% on select 2020 trips + $300 off Europe Flights
                   <i className="BPrightArrow" />
                 </div>
-
                 <div>
                   <span style={{ fontWeight: 'bold', fontSize: '16px' }}>YEAR ROUND SAVINGS</span>
                   {' '}
@@ -352,7 +289,7 @@ export default class SearchBar extends React.Component {
                   <i className="BPrightArrow" />
                 </div>
               </section>
-              <section style={{display: 'flex', flexDirection: 'row'}}>
+              <section style={{ display: 'flex', flexDirection: 'row' }}>
                 <div>
                   <span style={{ fontWeight: 'bold', fontSize: '16px' }}>LAST MINUTE DEALS</span>
                   {' '}
@@ -360,7 +297,6 @@ export default class SearchBar extends React.Component {
                   Save on soon to depart trips
                   <i className="BPrightArrow" />
                 </div>
-
                 <div>
                   <span style={{ fontWeight: 'bold', fontSize: '16px', marginRight: '20px' }}>SOLO TRAVELER DEALS</span>
                   {' '}
@@ -368,7 +304,6 @@ export default class SearchBar extends React.Component {
                   Savings for solo travelers
                   <i className="BPrightArrow" />
                 </div>
-
                 <div>
                   <span style={{ fontWeight: 'bold', fontSize: '16px' }}>TODAY'S BEST OFFERS</span>
                   {' '}
@@ -386,7 +321,6 @@ export default class SearchBar extends React.Component {
               </div>
             </div>
           </div>
-
           <div className="BProw2part1" id="BPaboutus" onMouseEnter={this.hidetripdetails} onMouseLeave={this.showtripdetails}>
             {' '}
             <span>ABOUT US</span>
@@ -397,13 +331,12 @@ export default class SearchBar extends React.Component {
                 <br />
                 For over 70 years, we've carefully crafted our trips with one goal in mind; to enable our guests to live The Good Life
               </div>
-              <section style={{display: 'flex', flexDirection: 'row'}}>
+              <section style={{ display: 'flex', flexDirection: 'row' }}>
                 <div>
                   <span style={{ fontWeight: 'bold', fontSize: '16px' }}>EXPLORE MORE</span>
                   {' '}
                   <br />
                   About Be My Guest
-
                   <i className="BPrightArrow" />
                 </div>
                 <div>
@@ -421,7 +354,7 @@ export default class SearchBar extends React.Component {
                   <i className="BPrightArrow" />
                 </div>
               </section>
-              <section style={{display: 'flex', flexDirection: 'row'}}>
+              <section style={{ display: 'flex', flexDirection: 'row' }}>
                 <div>
                   <span style={{ fontWeight: 'bold', fontSize: '16px' }}>TRAFALGAR HIGHLIGHTS</span>
                   {' '}
@@ -444,7 +377,7 @@ export default class SearchBar extends React.Component {
                   <i className="BPrightArrow" />
                 </div>
               </section>
-              <section style={{display: 'flex', flexDirection: 'row'}}>
+              <section style={{ display: 'flex', flexDirection: 'row' }}>
                 <div>
                   <span style={{ fontWeight: 'bold', fontSize: '16px' }}>MOMENTS</span>
                   {' '}
@@ -469,19 +402,17 @@ export default class SearchBar extends React.Component {
               </section>
             </div>
           </div>
-
           <div className="BProw2part1" id="BPmakeadifference" onMouseEnter={this.hidetripdetails} onMouseLeave={this.showtripdetails}>
             {' '}
             <span>MAKE A DIFFERENCE</span>
             <i className="BPdownArrow" />
             <div style={{ border: 'none' }} className="BPmakeadifferenceDropdown">
-
               <div>
                 <span style={{ fontWeight: 'bold', fontSize: '16px' }}>JoinTrafalgar</span>
                 <br />
                 72 countries. 7 continents. Through JoinTrafalgar, we are doing our part to have a positive impact on the places we visit and the people who call them home.
               </div>
-              <section style={{display: 'flex', flexDirection: 'row'}}>
+              <section style={{ display: 'flex', flexDirection: 'row' }}>
                 <div>
                   <span style={{ fontWeight: 'bold', fontSize: '16px' }}>OUR STORY</span>
                   {' '}
@@ -512,12 +443,10 @@ export default class SearchBar extends React.Component {
               </div>
             </div>
           </div>
-
           <div className="BProw2part2">
             {' '}
             <span>Get a Quote</span>
           </div>
-
           <div className="BProw2part2">
             {' '}
             <span id="BPbrands">
@@ -526,18 +455,23 @@ export default class SearchBar extends React.Component {
               <div className="BPbrandsDropdown">
                 <section className="BPbrandsimages">
                   <img className="BPbrandsDropdownImg" src="https://front-end-capstone-trafalgar.s3-us-west-1.amazonaws.com/BrendanVacations.png" alt="Brendan Vacations" />
-                  <img style={{maxWidth:'24%',
-    height:'auto'}} className="BPbrandsDrowdownImg" src="https://front-end-capstone-trafalgar.s3-us-west-1.amazonaws.com/costsaver.png" alt="Costsaver" />
+                  <img
+                    style={{
+                      maxWidth: '24%',
+                      height: 'auto',
+                    }}
+                    className="BPbrandsDrowdownImg"
+                    src="https://front-end-capstone-trafalgar.s3-us-west-1.amazonaws.com/costsaver.png"
+                    alt="Costsaver"
+                  />
                 </section>
               </div>
             </span>
           </div>
-
           <div className="BProw2part2">
             {' '}
             <span>Agents Login</span>
           </div>
-
           <div className="BProw2part2">
             {' '}
             <img id="BPuserAvatar" src="https://front-end-capstone-trafalgar.s3-us-west-1.amazonaws.com/user.svg.png" alt="User Avatar" />
@@ -561,26 +495,21 @@ export default class SearchBar extends React.Component {
             </span>
           </div>
         </div>
-        
         <div style={tripdetailsplacement}>
-          
           {this.state.currentTrip.length > 0 ? <TripDetails trip={this.state.currentTrip[0]} /> : null}
-          
         </div>
-        
-        <div id="itinerary"></div>
+        <div id="itinerary" />
         <div style={tripdetailsplacement}>
           {this.state.currentTrip.length > 0 ? <MoreTripDetails trip={this.state.currentTrip[0]} /> : null}
         </div>
-        
-        {/* {this.state.showSecondSearchBar ?  */}
-        <div style={{textAlign: 'center', marginTop: '5%'}}>
-        <h2 style={{ color: '#4c4c4c' , display:'inline-block'}}>Or search for something else</h2>
-
-        <div><div id="BPsecondSearchBar">
-          <Search2 searchResults={this.state.queryResults} updateQuery={this.updateQuery} updateSearchResults={this.updateSearchResults} getOneTrip={this.getOneTrip} removeSearchResults={this.removeSearchResults} /></div></div>
-          {/* : null} */}
-</div>
+        <div style={{ textAlign: 'center', marginTop: '5%' }}>
+          <h2 style={{ color: '#4c4c4c', display: 'inline-block' }}>Or search for something else</h2>
+          <div>
+            <div id="BPsecondSearchBar">
+              <Search2 searchResults={this.state.queryResults} updateQuery={this.updateQuery} updateSearchResults={this.updateSearchResults} getOneTrip={this.getOneTrip} removeSearchResults={this.removeSearchResults} />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

@@ -5,33 +5,24 @@ const options = require('./options.js');
 const data = {
 
   season: () => (
-    // generate a random season
     ['Spring', 'Summer', 'Fall', 'Winter'][Math.floor(Math.random() * 4)]
   ),
   days: () => (
-    // generate a random number between 4 and 21.
-    // Nights will equal this - 1
-    // and breakfasts/lunches/dinners randomly generated based on # of days/nights
     Math.floor(Math.random() * (21 - 4 + 1) + 4)
   ),
 
   continent: () => (
-    // generate a random continent
     options.continents[Math.floor(Math.random() * 6)]
   ),
 
   country: (continent) => (
-    // pick a random country on that continent
     options.countries[continent][Math.floor(Math.random() * (options.countries[continent].length))]
   ),
 
   cities: (country) => {
     const allCities = options.cities[country];
-    // pick a random number of cities (at least 2) based on how many are in that country
     let numberOfCities = Math.floor(Math.random() * allCities.length + 1);
     if (numberOfCities === 1) { numberOfCities = 2; }
-    // for the number of cities to add, pick a random city
-    // and if it isn't already in the citiesToAdd, add it
     const citiesToAdd = [];
     while (numberOfCities > 0) {
       const city = allCities[Math.floor(Math.random() * (allCities.length))];
@@ -44,22 +35,18 @@ const data = {
   },
 
   imageUrl: (cities) => {
-    // generates a random city generated from the previous function
     const randomCity = cities[Math.floor(Math.random() * cities.length)];
-    // creates the corresponding Object Url in S3
     const imageUrl = `https://front-end-capstone-trafalgar.s3-us-west-1.amazonaws.com/${randomCity}.jpg`;
     return imageUrl;
   },
 
   name: (country) => {
-    // generate a trip name based on a randomly selected adjective
     const adjectives = ['Explore', 'Adventures In', 'Best of', 'Discover', 'Experience', 'Highlights of', 'Journey through', 'Majestic', 'Splendors of', 'Travel', 'Wonders of'];
     const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
     return `${adjective} ${country}`;
   },
 
   descriptions: () => {
-    // randomly generate first and second descriptions from lorem ipsum text
     const firstDescription = [
       'Suscipit tellus mauris a diam maecenas, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       'Diam donec adipiscing tristique risus nec feugiat, in ornare quam viverra orci sagittis eu volutpat.',
@@ -80,7 +67,6 @@ const data = {
   },
 
   the_trafalgar_difference: () => {
-    // generate randomly between 1 and 4 entries with real first word followed by lorem ipsum text
     const firstWord = ['Connect With Locals', 'Stays With Stories', 'Local Specialists', 'Dive Into Culture', 'Make A Difference'];
     const restOfSentence = [
       'volutpat sed',
@@ -96,7 +82,6 @@ const data = {
     while (numberOfSentences > 0) {
       const first = firstWord[Math.floor(Math.random() * firstWord.length)].toUpperCase();
       const rest = restOfSentence[Math.floor(Math.random() * restOfSentence.length)];
-      // check there are no repeats of the first part
       if (sentences.filter((sentence) => sentence.includes(first)).length === 0) {
         sentences.push(`${first} ${rest}`);
         numberOfSentences -= 1;
@@ -106,7 +91,6 @@ const data = {
   },
 
   sightseeing_highlights: () => {
-    // generate randomly between 1 and 4 entries with real first word followed by lorem ipsum text
     const firstWord = ['City Tour', 'Visit', 'Orientation', 'View', 'See', 'Scenic Drive', 'VIP Admission'];
     const restOfSentence = [
       'egestas sed',
@@ -123,7 +107,6 @@ const data = {
     while (numberOfSentences > 0) {
       const first = firstWord[Math.floor(Math.random() * firstWord.length)].toUpperCase();
       const rest = restOfSentence[Math.floor(Math.random() * restOfSentence.length)];
-      // check there are no repeats of the first part
       if (sentences.filter((sentence) => sentence.includes(first)).length === 0) {
         sentences.push(`${first} ${rest}`);
         numberOfSentences -= 1;
@@ -133,7 +116,6 @@ const data = {
   },
 
   travel_highlights: () => {
-    // generate 6-12 travel highlights based on real data from Trafalgar page
     const choices = [
       'Audio Headsets for flexible sightseeing',
       'Luxury air-conditioned coach with Wi-Fi in most countries or alternative transportation (such as rail journeys)',
