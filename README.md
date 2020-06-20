@@ -21,4 +21,4 @@ From within the root directory:
 
 * npm start (to run server)
 
-![Screenshot]('./Front_End_Capstone_screenshot)
+![Screenshot]('./Front_End_Capstone_screenshot.png')
