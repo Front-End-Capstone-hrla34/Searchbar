@@ -176,10 +176,13 @@ export default class SearchBar extends React.Component {
 
   componentDidMount() {
     this.getAllTrips();
-    const id = window.location.href;
-    const edited = id.split('/');
-    const url = edited[edited.length - 1];
-    this.getOneTrip(url);
+    // USE THIS FOR RUNNING ALL SERVICES TOGETHER:
+    // const id = window.location.href;
+    // const edited = id.split('/');
+    // const url = edited[edited.length - 1];
+    // this.getOneTrip(url)
+    // USE THIS FOR RUNNING JUST THIS SERVICE:
+    this.getOneTrip(Math.floor(Math.random() * 100));
   }
 
   render() {
