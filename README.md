@@ -20,3 +20,5 @@ From within the root directory:
 * npm run seed (to seed database)
 
 * npm start (to run server)
+
+![Searchbar](./Front_End_Capstone_screenshot.png)
